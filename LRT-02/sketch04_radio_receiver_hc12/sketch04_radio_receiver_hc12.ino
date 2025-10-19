@@ -1,5 +1,5 @@
 /*
- * Sketch for receiver
+ * Sketch for receiver, module hc-12
  */
 #include <SoftwareSerial.h>                      // * Include software serial library
 #define RX 8                                     // * Define TX pin for software serial
