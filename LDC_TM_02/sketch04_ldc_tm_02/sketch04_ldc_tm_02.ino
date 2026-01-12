@@ -19,18 +19,49 @@ SoftwareSerial Serial4(RX,TX);      // * Create software serial port
 #include <OneWire.h>                          // include library for working with OneWire interface
 #include <Wire.h>                             // Include library for working with hardware I2C bus.
 
+byte data[5];
+int device_mode = 2001;  
+
 void setup() {
   pinMode(4, OUTPUT); // declare pin 4 as output
   pinMode(5, OUTPUT); // declare pin 5 as output
   pinMode(6, OUTPUT); // declare pin 5 as output
   pinMode(7, OUTPUT); // declare pin 5 as output
+
+  pinMode(12, OUTPUT); // declare pin 5 as output for TESTING
+  
   Serial.begin(9600);                                       // Serial port initialization at 9600 baud rate
 
   Serial4.begin(9600);                        // Initialize serial port at 9600 baud for radio module HC-12
   randomSeed(millis());
+
+   pinMode(LED_BUILTIN, OUTPUT);     // IMPORTANT: Set LED pin as output
 }
 
 void loop() {
+   if (Serial4.available() && Serial4.read() == 0xAA) {
+    // Read string from serial port and convert to byte array data
+    String receivedString = Serial4.readStringUntil('\n');
+    receivedString.toCharArray((char*)data, sizeof(data));
+    
+    // Debug output
+//    Serial.println(data[0]);
+//    Serial.println(data[1]);
+//    Serial.println("device_mode:");
+//    Serial.println(data[2]);
+//    Serial.println(data[3]);
+//    Serial.println(data[4]);
+    // Serial.println(sizeof(data));
+    device_mode = data[2];
+    command_number = data[2];
+//    Serial.println("---++---");
+    
+    // Turn built-in LED on/off based on received data
+    digitalWrite(LED_BUILTIN, data[0]);
+    
+    delay(1000);
+  }
+  //****************
   if (Serial.available() > 0) {                             // Check if data is available for reading
     String inputString = Serial.readStringUntil('\n');      // Read string from serial port
     inputString.trim();                                     // Remove extra spaces and newline characters
@@ -77,7 +108,11 @@ void loop() {
   //..radio logic
   int trans_data = random(101);
   Serial.print(", trans_data: ");  
-  Serial.println(trans_data);
+  Serial.print(trans_data);
+
+  Serial.print(", device_mode: ");  
+  Serial.println(device_mode);
+  
   function_transmit(trans_data);
   delay(1000);
   
@@ -100,6 +135,16 @@ void loop() {
       
     case 4:
       digitalWrite(5, 1);
+      delay(pause);
+      break;
+
+    case 13:
+      digitalWrite(12, 0);
+      delay(pause);
+      break;
+      
+    case 14:
+      digitalWrite(12, 1);
       delay(pause);
       break;
 

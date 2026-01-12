@@ -4,6 +4,7 @@
 int pause = 2000;
 int device_mode = 2001;
 int counter = 0;
+int command_number = 0;
 
 #include <SoftwareSerial.h>         // * Include software serial library
 #define RX 8                        // * Define TX pin for software serial port
@@ -34,6 +35,26 @@ void setup(void) {
   }
   
 void loop(void) {
+    //****************
+  if (Serial.available() > 0) {                             // Check if data is available for reading
+    String inputString = Serial.readStringUntil('\n');      // Read string from serial port
+    inputString.trim();                                     // Remove extra spaces and newline characters
+    
+    if (inputString.length() > 0) {                         // Check if string is not empty
+      float inputValue = inputString.toFloat();             // Try to convert string to number
+      float result = inputValue * 2;                        // Multiply by 2
+      command_number = (int) inputValue;
+
+       //..radio logic
+//  int trans_data = random(5);
+  Serial.print(", trans_data: ");
+//  int trans_data_2 = 13; 
+  Serial.println(command_number);
+  function_transmit(command_number, 2);
+  delay(1000);
+    }
+  }
+  
   Serial.println("command_and_control_center_test_model_01");
   Serial.println("device_mode");
   Serial.println(device_mode);
@@ -59,12 +80,12 @@ void loop(void) {
     
     delay(1000);
   }
-  //..radio logic
-  int trans_data = random(5);
-  Serial.print(", trans_data: ");
-  int trans_data_2 = trans_data + 10; 
-  Serial.println(trans_data_2);
-  function_transmit(trans_data_2, 2);
+//  //..radio logic
+//  int trans_data = random(5);
+//  Serial.print(", trans_data: ");
+//  int trans_data_2 = 13; 
+//  Serial.println(trans_data_2);
+////  function_transmit(trans_data_2, 2);
   delay(1000);
 
 }
