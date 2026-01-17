@@ -89,7 +89,7 @@ void loop() {
   voltage = sensorValue * 5.0 / 1024.0;                    // Voltage calculation
   current = (voltage - 2.49) / 0.185;                       // Current calculation
   input_voltage = voltageSensorValue * 5.0 / 1024.0;       // Input voltage calculation
- 
+  
   Serial.print("adc_value: ");                    // Send data to the serial port
   Serial.print(sensorValue);
 
@@ -113,7 +113,8 @@ void loop() {
   Serial.print(", device_mode: ");  
   Serial.println(device_mode);
   
-  function_transmit(trans_data);
+  //function_transmit(trans_data);
+  function_transmit_all();
   delay(1000);
   
 
@@ -169,6 +170,27 @@ void loop() {
       break;
   }
   delay(2000);
+}
+
+void function_transmit_all() {
+  // create jsonString
+  String json = "";
+  json += "\"adc_value\":" + String(sensorValue) + ",";
+  json += "\"ard_adc1_value\":" + String(voltageSensorValue) + ",";
+  json += "\"adc_voltage\":" + String(voltage, 2) + ",";
+  json += "\"current\":" + String(current, 2) + ",";
+  json += "\"ard_voltage\":" + String(input_voltage, 2) + ",";
+  json += "\"rand\":" + String(random(101)) + ",";
+  json += "\"mode\":" + String(device_mode);
+  json += "";
+
+  Serial.println(json);
+  
+  // transmitting by radio
+  Serial4.write(0xAA);
+  Serial4.print(json);
+  Serial4.write('\n');
+  delay(2500);
 }
 
 void function_transmit(int x) {

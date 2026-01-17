@@ -47,33 +47,35 @@ void loop(void) {
 
        //..radio logic
 //  int trans_data = random(5);
-  Serial.print(", trans_data: ");
+//  Serial.print(", trans_data: ");
 //  int trans_data_2 = 13; 
-  Serial.println(command_number);
+//  Serial.println(command_number);
   function_transmit(command_number, 2);
   delay(1000);
     }
   }
   
-  Serial.println("command_and_control_center_test_model_01");
-  Serial.println("device_mode");
-  Serial.println(device_mode);
+//  Serial.println("command_and_control_center_test_model_01");
+//  Serial.println("device_mode");
+//  Serial.println(device_mode);
    // If there is data in buffer and read byte equals packet header
   if (Serial4.available() && Serial4.read() == 0xAA) {
     // Read string from serial port and convert to byte array data
+    Serial4.setTimeout(3500);
     String receivedString = Serial4.readStringUntil('\n');
-    receivedString.toCharArray((char*)data, sizeof(data));
+//    receivedString.toCharArray((char*)data, sizeof(data));
     
     // Debug output
-    Serial.println(data[0]);
-    Serial.println(data[1]);
-    Serial.println("device_mode:");
-    Serial.println(data[2]);
-    Serial.println(data[3]);
-    Serial.println(data[4]);
+//     Serial.println("---++---111");
+//    Serial.println(receivedString.length());
+    Serial.println(receivedString);
+//    Serial.println("device_mode:");
+//    Serial.println(data[2]);
+//    Serial.println(data[3]);
+//    Serial.println(data[4]);
     // Serial.println(sizeof(data));
     device_mode = data[2];
-    Serial.println("---++---");
+//    Serial.println("---++---");
     
     // Turn built-in LED on/off based on received data
     digitalWrite(LED_BUILTIN, data[0]);
@@ -86,7 +88,7 @@ void loop(void) {
 //  int trans_data_2 = 13; 
 //  Serial.println(trans_data_2);
 ////  function_transmit(trans_data_2, 2);
-  delay(1000);
+  delay(3500);
 
 }
 
